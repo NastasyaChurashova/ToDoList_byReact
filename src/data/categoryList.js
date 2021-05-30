@@ -1,4 +1,4 @@
-export const CategoryList = [
+export const categoryList = [
     {
       id: "1",
       title:"inbox",

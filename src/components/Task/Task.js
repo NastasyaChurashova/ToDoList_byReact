@@ -1,36 +1,61 @@
 import "./Task.css";
 import { Input} from "../Input/Input";
 import { Checkbox } from "../Checkbox/Checkbox";
-import { CategoryList } from "../Data/CategoryList";
+import { categoryList } from "../../data/categoryList";
 import { CategoryDot } from "../CategoryDot/CategoryDot";
 import { Delete } from "../Delete/Delete";
+import { useContext } from "react";
+import { EditingContext } from "../../providers/EditingProvider";
 
-export const Task = ({ done, text, category, updateList, index, deleteTask, id, isEditing }) => {
-    const currentCategory = CategoryList.find((categoryItem)=>categoryItem.id === category);
+export const taskKeys = {
+    done:"done",
+    text:"text",
+    category: "category",
+  };
+
+export const Task = ({ 
+    done, 
+    text, 
+    category, 
+    updateList, 
+    index, 
+    deleteTask, 
+    id, 
+    setCategoryModalOpen, 
+    setActiveTask, 
+    }) => {
+
+    const { isEditing } = useContext(EditingContext);
+    const currentCategory = categoryList.find((categoryItem)=>categoryItem.id === category);
     const handleState = (checked) => {
-        updateList(index, "done", checked);
+        updateList(index, taskKeys.done, checked);
     };
     const handleText = (text) => {
-        updateList(index, "text", text);
+        updateList(index, taskKeys.copytext, text);
     }
     const handleDelete = () => {
         deleteTask(id);
     };
-
-return (
-    <div className="task">
-        <div className="task__action">
-        <div className={`task__action-item ${isEditing && "task__action-item--flipped"}`}>
-            <Checkbox done={done} handleState={handleState} />
-        </div>
-            <div className={`task__action-item-back ${isEditing && "task__action-item-back--flipped"}`}>
-                <Delete onClick={handleDelete} />
+    const openCategoryModal = () => {
+        setCategoryModalOpen(true);
+        setActiveTask({ category, index });
+    };
+    return (
+        <div className="task">
+            <div className="task__action">
+                <div className={`task__action-item ${isEditing && "task__action-item--flipped"}`}>
+                <Checkbox done={done} handleState={handleState} />
+            </div>
+                <div className={`task__action-item-back ${isEditing && "task__action-item-back--flipped"}`}>
+                    <Delete onClick={handleDelete} />
+                </div>
+            </div>
+            <div className="task__input">
+                <Input text={text} handleText={handleText} />
+            </div>
+            <div className="task__category" onClick={openCategoryModal}>
+                {<CategoryDot color={currentCategory && currentCategory.color} />}
             </div>
         </div>
-        <div className="task__input">
-        <Input text={text} handleText={handleText} />
-        </div>
-        <div className="task__category">{currentCategory && <CategoryDot color={currentCategory.color} />}</div>
-    </div>
     );
 };
