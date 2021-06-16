@@ -1,46 +1,36 @@
-import "./CategoryModal.css";
-import { categoryList } from "../../data/categoryList";
+import { useContext } from "react";
+import { DataContext } from "../../providers/DataProvider";
 import { CategoryDot } from "../CategoryDot/CategoryDot";
 import { CheckIcon } from "../CheckIcon/CheckIcon";
-import { CloseButton } from "../CloseButton/CloseButton";
+import { Modal } from "../Modal/Modal";
+import "./CategoryModal.css";
 
 const CategoryItem = ({ id, title, color, isActive, onClick }) => {
-    const handleClick = () => {
-        onClick(id);
-    };
-    return (
-        <div className="category-item" onClick={handleClick}>
-            <div className="category-item--checkbox">
-                <CheckIcon checked={isActive}/>
-            </div>
-            <div className="category-item__title">
-                {title}
-            </div>
-            <div className="category-item__dot">
-            <CategoryDot color={color} />
-            </div>
-        </div>
-    );
+  const handleClick = (e) => {
+    e.stopPropagation();
+    onClick(id);
+  };
+  return (
+    <div className="category-item" onClick={handleClick}>
+      <div className="category-item--checkbox">
+        <CheckIcon checked={isActive} />
+      </div>
+      <div className="category-item__title">{title}</div>
+      <div className="category-item__dot">
+        <CategoryDot color={color} />
+      </div>
+    </div>
+  );
 };
 
-export const CategoryModal = ({ activeCategoryId, onClick, CloseModal }) => {
-    const renderCategory = (category) => (
-        <CategoryItem key={category.id} isActive={activeCategoryId === category.id} onClick={onClick} {...category}/>
-    );
-    return ( 
-        <div className="category-modal">
-            <div className="category-modal__box">
-                <div className="category-modal__head">
-                    <h4 className="category-modal__title">
-                            Select category
-                    </h4>
-                    <div className="category-modal__close">
-                        <CloseButton onClick={CloseModal}/>
-                    </div>
-                </div>
-                <div className="category-modal__list">
-                    {categoryList.map(renderCategory)}</div>
-                </div>
-        </div>
-    );
+export const CategoryModal = ({ activeCategoryId, onClick, closeModal }) => {
+  const { categoryList } = useContext(DataContext);
+  const renderCategory = (category) => (
+    <CategoryItem key={category.id} isActive={activeCategoryId === category.id} onClick={onClick} {...category} />
+  );
+  return (
+    <Modal title="Select Category" closeModal={closeModal}>
+      <div className="category-modal__list">{categoryList.map(renderCategory)}</div>
+    </Modal>
+  );
 };

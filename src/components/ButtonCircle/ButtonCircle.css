@@ -1,6 +1,5 @@
-.button-circle {
-  display: block;
-  position: absolute;
+.button-circle,
+.button-circle--active {
   width: 64px;
   height: 64px;
   border-radius: 50%;
@@ -8,24 +7,24 @@
   justify-content: center;
   align-items: center;
   box-shadow: 0 24px 32px rgba(21, 35, 56, 0.16);
-  bottom: 44px;
-  right: 16px;
   cursor: pointer;
   background-color: #fff;
   transition: background-color 0.25s ease-in-out;
 }
-
+.button-circle--active,
 .button-circle:hover {
-  background-color: #006cff;
+  background-color: #006CFF;
 }
-
 .button-circle__icon {
-  fill: #006cff;
+  fill: #006CFF;
   width: 24px;
   height: 24px;
-  transition: fill 0.25s ease-in-out;
+  transition: fill 0.25s ease-in-out, transform 0.25s ease-in-out;
 }
-
+.button-circle--active .button-circle__icon,
 .button-circle:hover .button-circle__icon {
   fill: #fff;
+}
+.button-circle--active .button-circle__icon {
+  transform: rotate(225deg);
 }
